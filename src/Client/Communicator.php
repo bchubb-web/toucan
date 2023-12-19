@@ -16,7 +16,6 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\ClientInterface as HttpClientInterface;
 use GuzzleHttp\Exception\BadResponseException;
 
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -25,27 +24,19 @@ use Psr\Http\Message\ResponseInterface;
 class Communicator implements CommunicatorInterface
 {
 
-
-    public function sendRefreshRequest(Token $token, string $refresh_endpoint, HttpClient $http_client): ResponseInterface
+    public function sendRefreshRequest(Token $token, string $refresh_endpoint, array $body, array $headers, HttpClient $http_client): ResponseInterface
     {
-
         $response = $http_client->request('POST', $refresh_endpoint, [
 
-            "body" => $this->createRefreshBody($token),
-            ...$this->createRefreshHeaders($token),
+            "body" => $body,
+            ...$headers,
 
         ]);
 
         return $response;
-
     }
 
-    protected function formatAuthorizationHeader(string $base, ?array $other): string 
-    {
-        return $base;
-    }
-
-    protected function createRefreshBody(Token $token): array
+    public function getRefreshBody(Token $token): array
     {
         $post_body = [
             "grant_type" => "refresh_token",
@@ -55,12 +46,18 @@ class Communicator implements CommunicatorInterface
         return $post_body;
     }
     
-    protected function createRefreshHeaders(Token $token): array 
+    public function getRefreshHeaders(Token $token): array 
     {
         $headers = [
-
+            'auth'
         ];
 
         return $headers;
     }
+
+    protected function formatAuthorizationHeader(string $base, ?array $other): string 
+    {
+        return $base;
+    }
+
 }

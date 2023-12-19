@@ -33,11 +33,11 @@ interface StoreInterface
     /**
      * Gets the desired oauth token or null
      *
-     * @param  string $client - indicates the desired token
+     * @param  Client $client - indicates the desired token
      *
      * @return ?Token
      */
-    public function retrieve( string $client ): ?Token;
+    public function retrieve( Client $client ): ?Token;
 
     /**
      * Updates an oauth token and indicates the success

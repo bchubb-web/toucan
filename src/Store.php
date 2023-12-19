@@ -33,7 +33,7 @@ class Store implements StoreInterface
 
         $this->table_name = $table_name;
 
-        $this->verifyTable()?->createTable();
+        $this->verifyTable($this->table_name)?->createTable($this->table_name);
 
     }
 
@@ -42,9 +42,9 @@ class Store implements StoreInterface
      *
      * @return ?Store
      */
-    protected function verifyTable(): ?Store
+    protected function verifyTable(string $table_name): ?Store
     {
-        return $this->conn->query("SELECT 1 FROM {$this->table_name} LIMIT 1") ? null : $this;
+        return $this->conn->query("SELECT 1 FROM `{$table_name}` LIMIT 1") ? null : $this;
     }
 
     /**
@@ -52,42 +52,42 @@ class Store implements StoreInterface
      *
      * @return bool
      */
-    protected function createTable(): bool 
+    protected function createTable($table_name): bool 
     {
-        $stmt = $this->conn->query(
+        $result = $this->conn->query(
             "
-            CREATE TABLE toucan_tokens (
-                toucan_tokensId INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                provider VARCHAR(16) NOT NULL,
-                access_token VARCHAR(4096) NOT NULL,
-                refresh_token VARCHAR(2048) NOT NULL,
-                last_refresh TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-                meta longtext
+            CREATE TABLE `{$table_name}` (
+                `toucan_tokensId` INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                `provider` VARCHAR(16) NOT NULL,
+                `access_token` VARCHAR(4096) NOT NULL,
+                `refresh_token` VARCHAR(2048) NOT NULL,
+                `last_refresh` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                `meta` longtext
             )
         "
         );
 
-        return $stmt ? true : false;
+        return (bool) $result;
     }
 
     /**
      * Gets the desired oauth token or null
      *
-     * @param  string $client - indicates the desired token
+     * @param  Client $client - indicates the desired token
      *
      * @return ?Token
      */
-    public function retrieve( string $client ): ?Token
+    public function retrieve( Client $client ): ?Token
     {
 
-        $stmt = $this->conn->prepare("SELECT * FROM {$this->table_name} WHERE provider=?");
+        $stmt = $this->conn->prepare("SELECT * FROM {$this->table_name} WHERE `provider`=?");
 
-        $stmt->bind_param('s', $client);
+        $stmt->bind_param('s', $client->getProvider());
         $stmt->execute();
 
         $result =  $stmt->get_result()?->fetch_assoc();
         
-        return $result ? new Token($result["provider"], $result["access_token"], $result["refresh_token"], $result["last_refresh"]) : null;
+        return $result ? new Token($result["provider"], $result["access_token"], $result["refresh_token"], $result["last_refresh"], $client->getExpiry()) : null;
 
     }
 

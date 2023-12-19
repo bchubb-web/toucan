@@ -20,6 +20,10 @@ use Psr\Http\Message\ResponseInterface;
 interface CommunicatorInterface
 {
 
-    public function sendRefreshRequest(Token $token, string $refresh_endpoint, HttpClient $request_client): ResponseInterface;
+    public function sendRefreshRequest(Token $token, string $refresh_endpoint, array $body, array $headers, HttpClient $http_client): ResponseInterface;
+
+    public function getRefreshHeaders(Token $token): array;
+
+    public function getRefreshBody(Token $token): array;
 
 }
