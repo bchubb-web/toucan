@@ -1,6 +1,6 @@
 # Toucan
 
-![Logo](https://github.com/bchubb-web/toucan/blob/master/toucan.jpeg)
+![Logo](https://github.com/bchubb-web/toucan/blob/main/toucan.jpeg)
 
 Toucan is a simple OAuth token manager, build with vanilla PHP
 
