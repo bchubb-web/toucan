@@ -9,16 +9,12 @@
 
 namespace bchubbweb\Toucan;
 
-use GuzzleHttp\Client as HttpClient;
-
-
 /**
  * Basic template for OAuth client
  */
 interface ClientInterface
 {
-
-    public function __construct( string $provider, string $authenticate_endpoint, string $refresh_endpoint, array | string $scopes, int $expiry=3600, Store $store);
+    public function __construct(string $provider, string $authenticate_endpoint, string $refresh_endpoint, array | string $scopes, int $expiry = 3600, Store $store);
 
 
     public function getToken(): Token;

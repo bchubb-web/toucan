@@ -16,7 +16,6 @@ use mysqli;
  */
 interface StoreInterface
 {
-
     protected \mysqli $conn;
 
     protected string $table_name;
@@ -27,7 +26,7 @@ interface StoreInterface
      * @param mysqli $database_connection - connection to desired database
      * @param string $table_name          - desired name for storage table
      */
-    public function __construct( mysqli $database_connection, string $table_name="toucan_tokens" );
+    public function __construct(mysqli $database_connection, string $table_name = "toucan_tokens");
 
 
     /**
@@ -37,7 +36,7 @@ interface StoreInterface
      *
      * @return ?Token
      */
-    public function retrieve( Client $client ): ?Token;
+    public function retrieve(Client $client): ?Token;
 
     /**
      * Updates an oauth token and indicates the success

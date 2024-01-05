@@ -11,7 +11,6 @@
 namespace bchubbweb\Toucan;
 
 use GuzzleHttp\Client as HttpClient;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
 /**
@@ -19,7 +18,6 @@ use Psr\Http\Message\StreamInterface;
  */
 class Client implements ClientInterface
 {
-
     protected string $provider;
 
     protected string $refresh_endpoint;
@@ -35,7 +33,7 @@ class Client implements ClientInterface
     protected Token $token;
 
 
-    public function __construct( string $provider, string $authenticate_endpoint, string $refresh_endpoint, array | string $scopes, int $expiry=3600, Store $store)
+    public function __construct(string $provider, string $authenticate_endpoint, string $refresh_endpoint, array | string $scopes, int $expiry = 3600, Store $store)
     {
         $this->setProvider($provider);
 
@@ -48,7 +46,7 @@ class Client implements ClientInterface
         $this->expiry = $expiry;
 
         $this->token = $store->retrieve($this);
-        
+
         $this->handleRefresh($this->getToken(), $store);
     }
 
@@ -58,10 +56,12 @@ class Client implements ClientInterface
      */
     public function authenticate(): ?Client
     {
-        if (isset($_GET['code'])) return $this;
+        if (isset($_GET['code'])) {
+            return $this;
+        }
 
         // build query
-        $url = $this->authenticationUrlQuery( $this->authenticate_endpoint );
+        $url = $this->authenticationUrlQuery($this->authenticate_endpoint);
 
         // redirect to authorize
         header("Location: $url");
@@ -71,7 +71,7 @@ class Client implements ClientInterface
     {
     }
 
-    protected function authenticationUrlQuery( string $base_url ): string
+    protected function authenticationUrlQuery(string $base_url): string
     {
         $url = rtrim($base_url, '/\\');
 
@@ -86,7 +86,9 @@ class Client implements ClientInterface
 
     protected function handleRefresh(Token $token, Store $store)
     {
-        if ($token->hasExpired()) $new_token = $this->refreshAccessToken($token);
+        if ($token->hasExpired()) {
+            $new_token = $this->refreshAccessToken($token);
+        }
 
         if (isset($new_token) && $token->lastRefresh() !== $new_token->lastRefresh()) {
             $store->update($new_token);
@@ -129,12 +131,12 @@ class Client implements ClientInterface
         return $this->token;
     }
 
-    protected function setToken(Token $new_token): void 
+    protected function setToken(Token $new_token): void
     {
         $this->token = $new_token;
     }
 
-    protected function getScopes($delimeter=" "): string
+    protected function getScopes($delimeter = " "): string
     {
         return implode($delimeter, $this->scopes);
     }

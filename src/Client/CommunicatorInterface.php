@@ -9,8 +9,7 @@
 
 namespace bchubbweb\Toucan\Client;
 
-
-use \bchubbweb\Toucan\Token as Token;
+use bchubbweb\Toucan\Token as Token;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Http\Message\ResponseInterface;
 
@@ -19,7 +18,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 interface CommunicatorInterface
 {
-
     public function sendRefreshRequest(Token $token, string $refresh_endpoint, array $body, array $headers, HttpClient $http_client): ResponseInterface;
 
     public function getRefreshHeaders(Token $token): array;

@@ -14,7 +14,6 @@ use DateTime;
  */
 class Token
 {
-
     protected string $provider;
 
     protected string $access_token;
@@ -90,9 +89,9 @@ class Token
 
     }
 
-    public function hasExpired(): bool 
+    public function hasExpired(): bool
     {
-        return ( $this->getExpiryLimit($this)->getTimestamp() > time() );
+        return ($this->getExpiryLimit($this)->getTimestamp() > time());
     }
 
     protected function getExpiryLimit(Token $token): DateTime

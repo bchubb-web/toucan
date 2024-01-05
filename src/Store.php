@@ -16,7 +16,6 @@ use mysqli;
  */
 class Store implements StoreInterface
 {
-
     protected \mysqli $conn;
 
     protected string $table_name;
@@ -27,7 +26,7 @@ class Store implements StoreInterface
      * @param mysqli $database_connection - connection to desired database
      * @param string $table_name          - desired name for storage table
      */
-    public function __construct( mysqli $database_connection, string $table_name="toucan_tokens" )
+    public function __construct(mysqli $database_connection, string $table_name = "toucan_tokens")
     {
         $this->conn = $database_connection;
 
@@ -52,7 +51,7 @@ class Store implements StoreInterface
      *
      * @return bool
      */
-    protected function createTable($table_name): bool 
+    protected function createTable($table_name): bool
     {
         $result = $this->conn->query(
             "
@@ -77,7 +76,7 @@ class Store implements StoreInterface
      *
      * @return ?Token
      */
-    public function retrieve( Client $client ): ?Token
+    public function retrieve(Client $client): ?Token
     {
 
         $stmt = $this->conn->prepare("SELECT * FROM {$this->table_name} WHERE `provider`=?");
@@ -86,7 +85,7 @@ class Store implements StoreInterface
         $stmt->execute();
 
         $result =  $stmt->get_result()?->fetch_assoc();
-        
+
         return $result ? new Token($result["provider"], $result["access_token"], $result["refresh_token"], $result["last_refresh"], $client->getExpiry()) : null;
 
     }
