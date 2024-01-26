@@ -33,7 +33,6 @@ class Store implements StoreInterface
         $this->table_name = $table_name;
 
         $this->verifyTable($this->table_name)?->createTable($this->table_name);
-
     }
 
     /**

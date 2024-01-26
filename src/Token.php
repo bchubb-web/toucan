@@ -22,6 +22,8 @@ class Token
 
     protected string $last_refresh;
 
+    protected array $scopes;
+
     protected int $expiry;
 
     /**
@@ -32,7 +34,7 @@ class Token
      * @param string $refresh_token - token used to refresh when access token expires
      * @param int    $last_refresh  - timestamp of the last refresh
      */
-    public function __construct(string $provider, string $access_token, string $refresh_token, string $last_refresh, int $expiry)
+    public function __construct(string $provider, string $access_token, string $refresh_token, string $last_refresh, array $scopes, int $expiry)
     {
         $this->provider = $provider;
 
@@ -41,6 +43,8 @@ class Token
         $this->refresh_token = $refresh_token;
 
         $this->last_refresh = $last_refresh;
+
+        $this->scopes = $scopes;
 
         $this->expiry = $expiry;
     }
@@ -99,6 +103,16 @@ class Token
         return new DateTime(date("y-m-d h:i:s", $token->lastRefresh()->getTimestamp() + $this->expiry));
     }
 
+    /**
+     * Returns the token's scopes
+     *
+     * @return array
+     */
+    public function scopes(): array
+    {
+        return $this->scopes;
+
+    }
 
 
 }
